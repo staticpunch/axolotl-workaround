@@ -15,7 +15,7 @@ torch_dtype = torch.bfloat16
 device_map = {"": 0}
 
 model_id = "NousResearch/Hermes-2-Pro-Mistral-7B"
-peft_id = "./qlora-out"
+peft_id = "./qlora-out-3"
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
@@ -142,7 +142,7 @@ def format_prompt(messages, bot_config):
         }
         segments.append(segment)
     prompt = ''.join([x['text'] for x in segments])
-    prompt += f"<|im_start|>assistant\n{bot_name}:"
+    prompt += f"<|im_start|>assistant\n(length = massive)\n{bot_name}:"
     return prompt
     
 
@@ -163,8 +163,8 @@ def vim_input():
     return text
 
 def chat():
-    bots = load_dataset("roleplay4fun/aesir-v1.0", split="train")
-    bot_config = bots[27]
+    bots = load_dataset("roleplay4fun/bot_configs", split="train")
+    bot_config = bots[3]
     user_name = "Anonymous user"
     bot_name = bot_config["bot_name"]
     first_message = bot_config["conversations"][0]
@@ -188,8 +188,9 @@ def chat():
         messages.append({"from": "human", "value": prompt})
 
         formatted_prompt = format_prompt(messages, bot_config)
+
         response = generate(formatted_prompt)
-        response = f"{bot_name}: {response}"
+        response = f"(length = gigantic)\n{bot_name}: {response}"
         if torch.backends.mps.is_available():
             torch.mps.empty_cache()
         messages.append({"from": "gpt", "value": response})

@@ -7,12 +7,15 @@ load_in_4bit: true
 strict: false
 
 datasets:
-  # - path: roleplay4fun/20240326_pippa_segmented_experiment_00
-  - path: data/pippa-samples.jsonl
+  # - path: roleplay4fun/20240327_pippa_segmented_long_experiment_01
+  #   type: input_output
+  - path: roleplay4fun/20240327_limarp_segmented_experiment_00
     type: input_output
+  # - path: roleplay4fun/20240327_aesir_segmented_experiment_00
+  #   type: input_output
 dataset_prepared_path: last_run_prepared
 val_set_size: 0.0
-output_dir: ./qlora-out
+output_dir: ./qlora-out-3
 
 adapter: qlora
 lora_model_dir:
@@ -21,7 +24,7 @@ sequence_len: 4096
 sample_packing: true
 pad_to_sequence_len: true
 
-lora_r: 32
+lora_r: 64
 lora_alpha: 16
 lora_dropout: 0.05
 lora_target_linear: true
@@ -43,7 +46,7 @@ wandb_log_model:
 
 gradient_accumulation_steps: 8
 micro_batch_size: 4
-num_epochs: 1
+num_epochs: 3
 optimizer: adamw_bnb_8bit
 lr_scheduler: cosine
 learning_rate: 0.0002
@@ -58,7 +61,7 @@ gradient_checkpointing: true
 early_stopping_patience:
 resume_from_checkpoint:
 local_rank:
-logging_steps: 1
+logging_steps: 5
 xformers_attention:
 flash_attention: true
 
